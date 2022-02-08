@@ -13,8 +13,8 @@ require(asdreader)
 require(tidyr)
 set.seed(112345)
 cores=detectCores()-1
-
-PSMHead=readLines("H:/PostDoc/External_Projects/BII/PSMHead.csv")
+fileloc="H:/PostDoc/External_Projects/BII/"
+PSMHead=readLines(paste0(fileloc,"PSMHead.csv"))
 ```
 
 ## Pyranometer Output
