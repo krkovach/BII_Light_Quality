@@ -26,5 +26,7 @@ vignettes/*.pdf
 *.knit.md
 # R Environment Variables
 .Renviron
+# Other
 ASDoutput.csv
 *.Rproj
+*.gitignore
