@@ -38,8 +38,14 @@ spectra_library <- read_spectra(path = files_path,
 
 metadata_spectra <- meta(spectra_library)
 
+#Get time and date
+datetime <- as_datetime(metadata_spectra$time, format = "%m/%d/%Y %H:%M:%S", tz = "CTD")
+date <- as.Date(datetime)
+time <- format(datetime, format = "%H:%M:%S")
+
 # Integrate meta to files
-frame_organized$time <- metadata_spectra$time
+frame_organized$date <- date
+frame_organized$time <- time
 
 #-------------------------------------------------------------------------------
 # Step 3 - Match spectra at sensor transitions
@@ -61,7 +67,7 @@ frame_organized <- cbind(frame_organized, frame_spectra)
 
 # Select your own path and name
 export_pathname <- paste0(root_path, "/",
-                          "spectra_organized.txt")
+                          "sig_files.txt")
 
 fwrite(frame_organized, export_pathname, sep = "\t")
 # Please remember check for suspicions values
