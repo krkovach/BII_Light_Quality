@@ -18,7 +18,7 @@ library(data.table)
 
 #-------------------------------------------------------------------------------
 #Function
-psm_files <- function(paths, column = 2) {
+read_psm <- function(paths, column = 2) {
   
   #To fill
   to_complete <- data.table()
