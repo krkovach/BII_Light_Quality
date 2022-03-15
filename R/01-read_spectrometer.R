@@ -125,6 +125,9 @@ svc_library <- read_svc(path = files_svc,
                         column = 2, #1 Irrad. (Ref.), 2, Irrad. (Target), 3 Tgt./Ref.
                         new_bands = 338:1990)
 
+#Note on read spectra: .sig files have different bands, these are re sampled to a
+# standard band span for storage.
+
 # Integrate meta and spectra to frame_svc
 frame_svc <- cbind(frame_svc, svc_library)
 
