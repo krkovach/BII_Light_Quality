@@ -40,5 +40,5 @@ frame_ssm <- cbind(frame_ssm, ssm_library)
 # Step 3 - Export spectra
 
 fwrite(frame_ssm, 
-       paste0(ssm_folder_path, "/", "ssm_files.txt"),
+       paste0(ssm_folder_path, "/", "IDENT-Cloquet_BLK-C.txt"),
        sep = "\t")

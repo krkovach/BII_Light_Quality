@@ -20,10 +20,13 @@ read_ssm <- function(paths) {
   
   #To fill
   to_complete <- data.table()
-  to_meta <- data.frame(Wave = NA,
+  to_meta <- data.frame(date = NA,
+                        time = NA,
+                        Wave = NA,
                         Pix = NA,
                         Val = NA,
-                        Time = NA)
+                        iTime = NA)
+  to_meta$date <- as.Date(to_meta$date)
   
   #Wavelength
   wv <- NA
@@ -31,24 +34,19 @@ read_ssm <- function(paths) {
   #loop over paths
   for(i in 1:length(paths)) {
     
+    #File metadata
+    meta_file <- file.mtime(paths[i])
+    to_meta[i, 1] <- as.Date(meta_file) #get date
+    to_meta[i, 2] <- strftime(meta_file, format="%H:%M:%S") #get time
+    
     #Metadata
-    info <- fread(paths[i], skip= 1, nrows = 1, header = FALSE, sep = " ")
+    info <- fread(paths[i], skip= 1, nrows = 1, header = FALSE, sep = ":")
     
     #Fill
-    to_meta[i, 1] <- as.numeric(substr(info$V3, 6, 11))
-    to_meta[i, 2] <- as.numeric(substr(info$V4, 5, 7))
-    
-    if(ncol(info) == 15) {
-    
-      to_meta[i, 3] <- info$V6
-      to_meta[i, 4] <- as.numeric(substr(info$V7, 6, 8))
-    
-    } else {
-      
-      to_meta[i, 3] <- as.numeric(substr(info$V5, 5, 11))
-      to_meta[i, 4] <- as.numeric(substr(info$V6, 6, 8))
-    
-    }
+    to_meta[i, 3] <- strsplit(info$V2, " ")[[1]][1] #get wave
+    to_meta[i, 4] <- strsplit(info$V3, " ")[[1]][1] #get pix
+    to_meta[i, 5] <- strsplit(info$V4, " ")[[1]][1] #get val
+    to_meta[i, 6] <- strsplit(info$V5, " ")[[1]][1] #get itime
     
     #Spectra
     spectra <- fread(paths[i], skip= 2)
