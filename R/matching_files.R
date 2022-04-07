@@ -16,9 +16,6 @@ library(lubridate)
 #' @param file2 A data.table file as slave to anchor with the master.
 #' @param threshold A interger describing the threshold in seconds to match with 
 #' the master file.
- 
-#file1 <- fread("E:/ligth_quality/Data processing/Pyranometer/FAB_pyranometer.txt")
-#file2 <- fread("E:/ligth_quality/Data processing/BLK-C/FAB_BLK-C.txt")
 
 #-------------------------------------------------------------------------------
 #' Function
@@ -62,3 +59,8 @@ matching_files <- function(file1, file2, threshold = 9.99) {
 }
 
 
+#' Example
+file1 <- fread("E:/ligth_quality/Data processing/Pyranometer/FAB_pyranometer.txt")
+file2 <- fread("E:/ligth_quality/Data processing/BLK-C/FAB_BLK-C.txt")
+
+row_index <- matching_files(file1, file2)
