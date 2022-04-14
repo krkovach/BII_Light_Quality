@@ -1,8 +1,8 @@
 ################################################################################
-##### Match files by date and time
+##### Match frames by date and time
 ################################################################################
 
-# Function to match files by date and time
+# Function to frames files by date and time
 
 #-------------------------------------------------------------------------------
 # Libraries
@@ -20,7 +20,7 @@ library(lubridate)
 #-------------------------------------------------------------------------------
 #' Function
 
-matching_files <- function(file1, file2, threshold = 9.99) {
+matching <- function(file1, file2, threshold = 1) {
   
   #Matching function
   date_time_1 <- ymd_hms(paste0(file1$date, " ", file1$time))
@@ -57,10 +57,3 @@ matching_files <- function(file1, file2, threshold = 9.99) {
   return(complete)
   
 }
-
-
-#' Example
-file1 <- fread("E:/ligth_quality/Data processing/Pyranometer/FAB_pyranometer.txt")
-file2 <- fread("E:/ligth_quality/Data processing/BLK-C/FAB_BLK-C.txt")
-
-row_index <- matching_files(file1, file2)
