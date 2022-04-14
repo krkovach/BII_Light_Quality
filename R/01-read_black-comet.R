@@ -19,7 +19,7 @@ source("R/read_ssm.R")
 # Step 1 - Organize .SSM files based on root path
 
 # Different in your machine
-ssm_folder_path <- "E:/ligth_quality/FAB/BLK-C"
+ssm_folder_path <- "E:/ligth_quality/IDENT-Cloquet/BLK-C"
 
 # Load files
 frame_ssm <- ssm_files(ssm_folder_path)

@@ -23,7 +23,7 @@ source("R/read_svc.R")
 #-------------------------------------------------------------------------------
 # Root file directory
 
-path <- "E:/ligth_quality/FAB"
+path <- "E:/ligth_quality/IDENT-Cloquet"
 
 ################################################################################
 #### ASD folders ####

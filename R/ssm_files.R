@@ -14,8 +14,8 @@ library(data.table)
 
 #' @param root_path select the root path of 'Integrating Sphere' folder
 
-# example
-root_path <- "/media/antonio/antonio_ssd/ligth_quality/IDENT Cloquet/black_comet"
+#' @example
+# root_path <- "/media/antonio/antonio_ssd/ligth_quality/IDENT Cloquet/black_comet"
 
 #-------------------------------------------------------------------------------
 #Function
