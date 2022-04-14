@@ -32,10 +32,13 @@ read_svc <- function(paths, column = 2, new_bands = 338:1990) {
     
     #Metadata
     datetime <- fread(paths[i], skip= 17, nrows = 1, header = FALSE)$V2
-    datetime <- as.POSIXct(datetime, tz = "", "%m/%d/%Y %H:%M:%S")
     
-    date <- as.Date(datetime)
-    time <- format(datetime, tz = "", "%H:%M:%S")
+    date <- as.POSIXct(datetime, tz = "", "%m/%d/%Y %H:%M:%S")
+    date <- as.Date(date)
+    
+    time <- strsplit(datetime, " ")[[1]][2]
+    time <- format(strptime(time, "%I:%M:%S %p"), "%H:%M:%S")
+      
     type <- fread(paths[i], skip= 16, nrows = 1, header = FALSE)$V2
     
     #Fill

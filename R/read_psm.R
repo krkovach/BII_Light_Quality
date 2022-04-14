@@ -34,10 +34,14 @@ read_psm <- function(paths, column = 2) {
     
     #Metadata
     time <- fread(paths[i], skip= 7, nrows = 1, header = FALSE)
-    time <- time$V2
+    time <- substr(time$V2[1], 1, 8)
     
     date <- fread(paths[i], skip= 6, nrows = 1, header = FALSE)
     date <- date$V2
+    year <- substr(date, 7, 10)
+    month <- substr(date, 1, 2)
+    day <- substr(date, 4, 5)
+    date <- paste0(year, "-", month, "-", day)
     
     type <- fread(paths[i], skip= 14, nrows = 1, header = FALSE)
     type <- type$V3

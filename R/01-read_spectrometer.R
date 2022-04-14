@@ -20,6 +20,11 @@ source("R/svc_files.R")
 source("R/read_psm.R")
 source("R/read_svc.R")
 
+#-------------------------------------------------------------------------------
+# Root file directory
+
+path <- "E:/ligth_quality/FAB"
+
 ################################################################################
 #### ASD folders ####
 ################################################################################
@@ -28,7 +33,7 @@ source("R/read_svc.R")
 # Step 1 - Organize .asd files based on root path
 
 # Different in your machine
-asd_folder_path <- "/media/antonio/antonio_ssd/ligth_quality/FAB1_2_Irradiance_Measurements/ASD"
+asd_folder_path <- paste0(path, "/ASD")
 
 # Load files
 frame_asd <- asd_files(asd_folder_path)
@@ -74,7 +79,7 @@ fwrite(frame_asd,
 # Step 1 - Organize .psm files based on root path
 
 # Different in your machine
-psm_folder_path <- "/media/antonio/antonio_ssd/ligth_quality/FAB1_2_Irradiance_Measurements/PSM"
+psm_folder_path <- paste0(path, "/PSM")
 
 # Load files
 frame_psm <- psm_files(psm_folder_path)
@@ -109,7 +114,7 @@ fwrite(frame_psm,
 # Step 1 - Organize .sig files based on root path
 
 # Different in your machine
-svc_folder_path <- "/media/antonio/antonio_ssd/ligth_quality/IDENT Cloquet/SVC"
+svc_folder_path <- paste0(path, "/SVC")
 
 # Load files
 frame_svc <- svc_files(svc_folder_path)
@@ -121,9 +126,9 @@ frame_svc <- svc_files(svc_folder_path)
 files_svc <- paste0(svc_folder_path, "/", frame_svc$folder, "/", frame_svc$file)
 
 # Read spectra
-svc_library <- read_svc(path = files_svc,
+svc_library <- read_svc(paths = files_svc,
                         column = 2, #1 Irrad. (Ref.), 2, Irrad. (Target), 3 Tgt./Ref.
-                        new_bands = 338:1990)
+                        new_bands = 283:2500)
 
 #Note on read spectra: .sig files have different bands, these are re sampled to a
 # standard band span for storage.
