@@ -19,7 +19,7 @@ source("R/read_ssm.R")
 # Step 1 - Organize .SSM files based on root path
 
 # Different in your machine
-ssm_folder_path <- "/media/antonio/antonio_ssd/ligth_quality/IDENT Cloquet/black_comet"
+ssm_folder_path <- "E:/ligth_quality/FAB/BLK-C"
 
 # Load files
 frame_ssm <- ssm_files(ssm_folder_path)
@@ -40,5 +40,5 @@ frame_ssm <- cbind(frame_ssm, ssm_library)
 # Step 3 - Export spectra
 
 fwrite(frame_ssm, 
-       paste0(ssm_folder_path, "/", "IDENT-Cloquet_BLK-C.txt"),
+       paste0(ssm_folder_path, "/", "FAB_BLK-C.txt"),
        sep = "\t")

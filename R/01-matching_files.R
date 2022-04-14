@@ -24,10 +24,24 @@ source("R/matching.R")
 #' @param threshold A interger describing the threshold in seconds to match with 
 #' the master file.
 
+#-------------------------------------------------------------------------------
+#' @example
+
 dates <- c(as.Date("2021-07-19"), as.Date("2021-07-20"))
 time_range <- as.POSIXct(c("08:00:00", "17:00:00"), format="%H:%M:%OS", tz="GMT")
 time_span <- 1
-list_files <- 
+threshold = 0.99
+pyranometer <- fread("E:/ligth_quality/Data processing/Pyranometer/FAB_pyranometer.txt")
+asd <- fread("E:/ligth_quality/Data processing/ASD/FAB_asd.txt")
+blk <- fread("E:/ligth_quality/Data processing/BLK-C/FAB_BLK-C.txt")
+psm <- fread("E:/ligth_quality/Data processing/PSM/FAB_psm.txt", header = TRUE)
+svc <- fread("E:/ligth_quality/Data processing/SVC/FAB_svc.txt")
+
+list_files <- list(pyranometer = pyranometer,
+                   asd = asd,
+                   blk = blk,
+                   psm = psm,
+                   svc = svc)
   
 #-------------------------------------------------------------------------------
 #' Function
