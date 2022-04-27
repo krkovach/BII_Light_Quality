@@ -2,7 +2,7 @@
 ##### Match files by date and time
 ################################################################################
 
-# Function to several frames by date and time
+# Function to match several frames by date and time
 
 #-------------------------------------------------------------------------------
 # Libraries
