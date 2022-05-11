@@ -15,16 +15,16 @@ library(lubridate)
 #' Arguments
 #' @param file A data.table product from 01-matching_files.
 #' @param index_target A column index of the target sensor.
-#' @param index_auxiliary A column index of the auxiliary sensor.
+#' @param index_reference A column index of the reference sensor.
 
 #-------------------------------------------------------------------------------
 #' @example
 
 # file <- fread("F:/ligth_quality/Data processing/file-index/FAB_file-ind.txt")
 # index_target <- 7
-# index_auxiliary <- 6
+# index_reference <- 6
 
-# test <- nearest_record(file, index_target, index_auxiliary)
+# test <- nearest_record(file, index_target, index_reference)
 # head(test)
 # Subset by threshold
 # test <- subset(test, abs(time_difference) <= 10)
@@ -33,7 +33,7 @@ library(lubridate)
 #-------------------------------------------------------------------------------
 #' Function
 
-nearest_record <- function(file, index_target, index_auxiliary) {
+nearest_record <- function(file, index_target, index_reference) {
   
   #Check for date and time
   if(class(file$dates)[1] != "IDate") {
@@ -54,21 +54,21 @@ nearest_record <- function(file, index_target, index_auxiliary) {
   #Select sensors
   target <- file_copy[,.SD,.SDcols= c(ncol(file_copy), index_target)]
   target <- na.exclude(target)
-  auxiliary <- file_copy[,.SD,.SDcols= c(ncol(file_copy), index_auxiliary)]
-  auxiliary <- na.exclude(auxiliary)
+  reference <- file_copy[,.SD,.SDcols= c(ncol(file_copy), index_reference)]
+  reference <- na.exclude(reference)
   
   #to complete
   complete <- data.frame(date = as.Date("1999-01-01"),
                          time = as.ITime("00:00:00 UTC"),
                          target = 0,
-                         auxiliary  = 0,
+                         reference  = 0,
                          time_difference = 0)
   
   #Loop over file1 rows
   for(i in 1:nrow(target)) {
     
     #Estimate difference
-    difference <- difftime(target$date_time[i], auxiliary$date_time, units = "secs")
+    difference <- difftime(target$date_time[i], reference$date_time, units = "secs")
     
     #Minimum value index
     min_value <- which.min(abs(difference))
@@ -80,13 +80,13 @@ nearest_record <- function(file, index_target, index_auxiliary) {
     complete[i, 1] <- as.Date(target$date_time[i])
     complete[i, 2] <- as.ITime(target$date_time[i])
     complete[i, 3] <- target[i , .SD, .SDcols= 2]
-    complete[i, 4] <- auxiliary[min_value , .SD, .SDcols= 2]
+    complete[i, 4] <- reference[min_value , .SD, .SDcols= 2]
     complete[i, 5] <- value
     
   }
   
   complete <- as.data.table(complete)
-  colnames(complete) <- c("date", "time", "target", "auxiliary", "time_difference")
+  colnames(complete) <- c("date", "time", "target", "reference", "time_difference")
   
   return(complete)
   
