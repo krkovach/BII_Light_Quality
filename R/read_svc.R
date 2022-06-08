@@ -59,7 +59,7 @@ read_svc <- function(paths, column = 2, new_bands = 338:1990) {
     spectra_smoothed <- predict(resample_function, new_bands)
     
     #Fill
-    to_complete <- cbind(to_complete, spectra_smoothed$y)
+    to_complete <- cbind(to_complete, ((spectra_smoothed$y*10000)/0.0000000001))
     
   }
   
