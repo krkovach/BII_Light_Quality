@@ -9,6 +9,7 @@
 # Libraries
 
 library(data.table)
+library(lubridate)
 
 #-------------------------------------------------------------------------------
 #' Arguments
@@ -23,24 +24,27 @@ library(data.table)
 #-------------------------------------------------------------------------------
 #' @example
 
-# file <- fread("F:/ligth_quality/Data processing/file-index/FAB_file-ind.txt")
-# index_target <- 7
-# index_reference <- 6
+ file <- fread("F:/ligth_quality/Data processing/file-index/IDENT-Cloquet_file-ind.txt")
+ index_target <- 7
+ index_reference <- 6
 
-# nr_file <- nearest_record(file, index_target, index_reference)
-# head(nr_file)
+ nr_file <- nearest_record(file, index_target, index_reference)
+ head(nr_file)
 # Subset by threshold
-# nr_file <- subset(nr_file, abs(time_difference) <= 10)
-# head(nr_file)
+ nr_file <- subset(nr_file, abs(time_difference) <= 10)
+ head(nr_file)
 
-# target <- fread("F:/ligth_quality/Data processing/SVC/FAB_svc.txt")
-# target_col <- 6:711
-# reference <- fread("F:/ligth_quality/Data processing/PSM/FAB_psm.txt")
-# reference_col <- 6:1179
+ target <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
+ target_col <- 6:711
+ reference <- fread("F:/ligth_quality/Data processing/PSM/IDENT-Cloquet_psm.txt")
+ reference_col <- 6:1179
 
 # Test function with out calibration file
-# trans <- get_transmittance(nr_file, target, target_col, reference, reference_col)
-# head(trans[, 1:10])
+ trans <- get_transmittance(nr_file, target, target_col, reference, reference_col)
+ head(trans[, 1:10])
+ fwrite(trans, 
+        "F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-psm.txt", 
+        sep = "\t")
 
 #-------------------------------------------------------------------------------
 #' Function

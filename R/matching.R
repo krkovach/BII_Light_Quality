@@ -14,7 +14,7 @@ library(lubridate)
 #' Arguments
 #' @param file1 A data.table file as master.
 #' @param file2 A data.table file as slave to anchor with the master.
-#' @param threshold A interger describing the threshold in seconds to match with 
+#' @param threshold A integer describing the threshold in seconds to match with 
 #' the master file.
 
 #-------------------------------------------------------------------------------
