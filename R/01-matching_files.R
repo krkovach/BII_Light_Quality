@@ -5,13 +5,13 @@
 # Function to match several frames by date and time
 
 #-------------------------------------------------------------------------------
-# Libraries
+#' Libraries
 
 library(data.table)
 library(lubridate)
 
 #-------------------------------------------------------------------------------
-# Load source code
+#' Load source code
 
 source("R/matching.R")
 

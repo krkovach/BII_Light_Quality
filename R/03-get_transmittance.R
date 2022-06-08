@@ -6,7 +6,7 @@
 # spectra from target and reference spectrometers.
 
 #-------------------------------------------------------------------------------
-# Libraries
+#' Libraries
 
 library(data.table)
 library(lubridate)

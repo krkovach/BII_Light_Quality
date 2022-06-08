@@ -6,7 +6,7 @@
 # target sensor.
 
 #-------------------------------------------------------------------------------
-# Libraries
+#' Libraries
 
 library(data.table)
 library(lubridate)
