@@ -1,9 +1,8 @@
 ################################################################################
-#### Transmittance estimation
+#### Get coefficients of difference between sensors
 ################################################################################
 
-# From the indexes of nearest record between sensors estimates the transmittance 
-# spectra from target and reference spectrometers.
+# Compute the coefficients of difference between sensors
 
 #-------------------------------------------------------------------------------
 #' Libraries
@@ -18,44 +17,53 @@ library(lubridate)
 #' @param target_col A data.table product from 01-matching_files.
 #' @param reference A data.table product from 01-matching_files.
 #' @param reference_col A data.table product from 01-matching_files.
-#' @param intercalibration Intercalibration coefficients between the sensors. If NULL,
-#' it assumes to be 1.
-
+#' @param metadata A frame with the target metadata.
+#' 
 #-------------------------------------------------------------------------------
 #' @example
 
- file <- fread("F:/ligth_quality/Data processing/file-index/IDENT-Cloquet_file-ind.txt")
- index_target <- 7
- index_reference <- 6
+file <- fread("F:/ligth_quality/Data processing/file-index/IDENT-Cloquet_file-ind.txt")
+index_target <- 7
+index_reference <- 6
 
- nr_file <- nearest_record(file, index_target, index_reference)
- head(nr_file)
+nr_file <- nearest_record(file, index_target, index_reference)
+head(nr_file)
 # Subset by threshold
- nr_file <- subset(nr_file, abs(time_difference) <= 10)
- head(nr_file)
+nr_file <- subset(nr_file, abs(time_difference) <= 60)
+head(nr_file)
 
- target <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
- target_col <- 6:2223
- reference <- fread("F:/ligth_quality/Data processing/PSM/IDENT-Cloquet_psm.txt")
- reference_col <- 6:2156
+target <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
+target_col <- 6:2223
+reference <- fread("F:/ligth_quality/Data processing/PSM/IDENT-Cloquet_psm.txt")
+reference_col <- 6:2156
+
+metadata <- fread("F:/ligth_quality/Data processing/Metadata/IDENT-Cloquet_SVC-locations.txt")
 
 # Test function with out calibration file
- trans <- get_transmittance(nr_file, target, target_col, reference, reference_col)
- head(trans[, 1:10])
- fwrite(trans, 
-        "F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-psm.txt", 
-        sep = "\t")
+trans <- get_transmittance(nr_file, target, target_col, reference, reference_col)
+head(trans[, 1:10])
+fwrite(trans, 
+       "F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-psm.txt", 
+       sep = "\t")
 
 #-------------------------------------------------------------------------------
 #' Function
 
-get_transmittance <- function(nr_file, 
-                              target, 
-                              target_col, 
-                              reference, 
-                              reference_col, 
-                              intercalibration = NULL) {
- 
+get_coefficients <- function(nr_file, 
+                             target, 
+                             target_col, 
+                             reference, 
+                             reference_col, 
+                             metadata) {
+  
+  #Get just the open observations
+  open <- merge(target, metadata, by = "file", all.x = TRUE, all.y = FALSE)
+  open <- open$ID == "open"
+  
+  #Subset
+  target <- target[open == TRUE, ]
+  nr_file <- 
+  
   #Select spectra
   target_spect <- target[, .SD , .SDcols = target_col] 
   reference_spect <- reference[, .SD , .SDcols = reference_col] 
@@ -99,7 +107,7 @@ get_transmittance <- function(nr_file,
     if(is.null(intercalibration) != TRUE) {
       
       transm <- transm*intercalibration
-    
+      
     }
     
     #Fill frame

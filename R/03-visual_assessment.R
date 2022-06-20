@@ -34,7 +34,6 @@ visual_assessment <- function(transmittance, site_name, output_path) {
   #Read wavelength
   Wavelength <- as.numeric(colnames(transmittance)[8:ncol(transmittance)])
   
-  
   #Files
   files <- nrow(transmittance)
   
@@ -55,34 +54,38 @@ visual_assessment <- function(transmittance, site_name, output_path) {
   #Loop over rows
   for(i in 1:files) {
     
-    Transmittance <- as.numeric(transmittance[i, 8:646])
+    Transmittance <- as.numeric(transmittance[i, 8:2158])
     
-    aveg <- mean(Transmittance)
+    aveg <- mean(Transmittance, na.rm = TRUE)
     
-    if(aveg >= 1) {
-      label <- "Average transmittance is higher than 1"
-    } else {
-      label <- ""
+    if(is.nan(aveg) == FALSE) {
+      
+      if(aveg >= 1) {
+        label <- "Average transmittance is higher than 1"
+      } else {
+        label <- ""
+      }
+      
+      plot <- ggplot() +
+        geom_line(aes(x = Wavelength, y = Transmittance)) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_y_continuous(expand = c(0, 0)) +
+        coord_cartesian(ylim= c(0, 1.5), xlim = c(min(Wavelength), max(Wavelength))) +
+        geom_hline(yintercept= 1, linetype = "dashed", color = "red") +
+        theme_light() + 
+        labs(
+          title = name_time[i],
+          subtitle = name_files[i],
+          caption = label,
+        )
+      
+      #Provide name
+      filename <- paste0(output_path, "/row_", i, ".png")
+      
+      #Export
+      ggsave(plot, filename = filename, device = "png")
+      
     }
-    
-    plot <- ggplot() +
-      geom_line(aes(x = Wavelength, y = Transmittance)) +
-      scale_x_continuous(expand = c(0, 0)) +
-      scale_y_continuous(expand = c(0, 0)) +
-      coord_cartesian(ylim= c(0, 1.5), xlim = c(min(Wavelength), max(Wavelength))) +
-      geom_hline(yintercept= 1, linetype = "dashed", color = "red") +
-      theme_light() + 
-      labs(
-        title = name_time[i],
-        subtitle = name_files[i],
-        caption = label,
-      )
-    
-    #Provide name
-    filename <- paste0(output_path, "/row_", i, ".png")
-    
-    #Export
-    ggsave(plot, filename = filename, device = "png")
     
   }
 }
