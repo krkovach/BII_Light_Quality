@@ -12,6 +12,11 @@ library(data.table)
 library(lubridate)
 
 #-------------------------------------------------------------------------------
+# Load source
+
+source("R/02-nearest_record.R")
+
+#-------------------------------------------------------------------------------
 #' Arguments
 #' @param nr_file A frame from the 02-nearest_record
 #' @param target A data.table product from 01-matching_files.
@@ -24,26 +29,34 @@ library(lubridate)
 #-------------------------------------------------------------------------------
 #' @example
 
- file <- fread("F:/ligth_quality/Data processing/file-index/IDENT-Cloquet_file-ind.txt")
+#Get index file
+ file <- fread("F:/ligth_quality/Data processing/file-index/FAB_file-ind.txt")
  index_target <- 7
  index_reference <- 6
 
+#Get nearest record
  nr_file <- nearest_record(file, index_target, index_reference)
  head(nr_file)
-# Subset by threshold
- nr_file <- subset(nr_file, abs(time_difference) <= 10)
+ nr_file <- subset(nr_file, abs(time_difference) <= 40)
  head(nr_file)
 
- target <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
+#Get target sensor
+ target <- fread("F:/ligth_quality/Data processing/SVC/FAB_svc.txt")
  target_col <- 6:2223
- reference <- fread("F:/ligth_quality/Data processing/PSM/IDENT-Cloquet_psm.txt")
+ 
+#Get reference sensor
+ reference <- fread("F:/ligth_quality/Data processing/PSM/FAB_psm.txt")
  reference_col <- 6:2156
 
+#Get intercalibration file
+ intercalibration <- fread("F:/ligth_quality/Data processing/Coefficients/FAB_coefficients.txt",
+                           header = TRUE)
+
 # Test function with out calibration file
- trans <- get_transmittance(nr_file, target, target_col, reference, reference_col)
+ trans <- get_transmittance(nr_file, target, target_col, reference, reference_col, intercalibration)
  head(trans[, 1:10])
  fwrite(trans, 
-        "F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-psm.txt", 
+        "F:/ligth_quality/Data processing/Transmittance/FAB_transmittance_svc-psm.txt", 
         sep = "\t")
 
 #-------------------------------------------------------------------------------
@@ -87,6 +100,12 @@ get_transmittance <- function(nr_file,
   #Empty frame to fill
   frame <- as.data.frame(target_match[0, ])
   
+  if(is.null(intercalibration) != TRUE) {
+    
+    intercal_vec <- as.numeric(intercalibration[1, ])
+    
+  }
+  
   for(i in 1:nrow(nr_file)) {
     
     #Get spectra by index
@@ -98,7 +117,7 @@ get_transmittance <- function(nr_file,
     
     if(is.null(intercalibration) != TRUE) {
       
-      transm <- transm*intercalibration
+      transm <- transm*intercal_vec
     
     }
     

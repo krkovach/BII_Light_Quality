@@ -11,6 +11,11 @@ library(data.table)
 library(lubridate)
 
 #-------------------------------------------------------------------------------
+# Load source
+
+source("R/02-nearest_record.R")
+
+#-------------------------------------------------------------------------------
 #' Arguments
 #' @param nr_file A frame from the 02-nearest_record
 #' @param target A data.table product from 01-matching_files.
@@ -22,29 +27,40 @@ library(lubridate)
 #-------------------------------------------------------------------------------
 #' @example
 
-file <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/file-index/FAB_file-ind.txt")
-index_target <- 7
-index_reference <- 6
+#Read matching file
+#file <- fread("F:/ligth_quality/Data processing/file-index/FAB_file-ind.txt")
+#index_target <- 7
+#index_reference <- 6
 
-nr_file <- nearest_record(file, index_target, index_reference)
-head(nr_file)
+#Get nearset record from sensors
+#nr_file <- nearest_record(file, index_target, index_reference)
+#head(nr_file)
 # Subset by threshold
-nr_file <- subset(nr_file, abs(time_difference) <= 40)
-head(nr_file)
+#nr_file <- subset(nr_file, abs(time_difference) <= 40) #difference less than 40s
+#head(nr_file)
 
-target <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/SVC/FAB_svc.txt")
-target_col <- 6:2223
-reference <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/PSM/FAB_psm.txt")
-reference_col <- 6:2156
+#Get target
+#target <- fread("F:/ligth_quality/Data processing/SVC/FAB_svc.txt")
+#target_col <- 6:2223
+#Get reference
+#reference <- fread("F:/ligth_quality/Data processing/PSM/FAB_psm.txt")
+#reference_col <- 6:2156
 
-metadata <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/Metadata/FAB_SVC-locations.txt")
+#Get metadata
+#metadata <- fread("F:/ligth_quality/Data processing/Metadata/FAB_SVC-locations.txt")
 
-# Test function with out calibration file
-coeff <- get_coefficients(nr_file, target, target_col, reference, reference_col, metadata)
-head(coeff[, 1:10])
-fwrite(coeff, 
-       "/media/antonio/antonio_ssd/ligth_quality/Data processing/Coefficients/FAB_coefficients_svc-psm.txt", 
-       sep = "\t")
+#Get coefficients
+#coeff <- get_coefficients(nr_file, 
+#                          target, 
+#                          target_col, 
+#                          reference, 
+#                          reference_col, 
+#                          metadata)
+
+#Export
+#fwrite(coeff, 
+#       "F:/ligth_quality/Data processing/Coefficients/FAB_coefficients_svc-psm.txt", 
+#       sep = "\t")
 
 #-------------------------------------------------------------------------------
 #' Function
