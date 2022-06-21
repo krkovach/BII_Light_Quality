@@ -22,28 +22,28 @@ library(lubridate)
 #-------------------------------------------------------------------------------
 #' @example
 
-file <- fread("F:/ligth_quality/Data processing/file-index/IDENT-Cloquet_file-ind.txt")
+file <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/file-index/FAB_file-ind.txt")
 index_target <- 7
 index_reference <- 6
 
 nr_file <- nearest_record(file, index_target, index_reference)
 head(nr_file)
 # Subset by threshold
-nr_file <- subset(nr_file, abs(time_difference) <= 60)
+nr_file <- subset(nr_file, abs(time_difference) <= 40)
 head(nr_file)
 
-target <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
+target <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/SVC/FAB_svc.txt")
 target_col <- 6:2223
-reference <- fread("F:/ligth_quality/Data processing/PSM/IDENT-Cloquet_psm.txt")
+reference <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/PSM/FAB_psm.txt")
 reference_col <- 6:2156
 
-metadata <- fread("F:/ligth_quality/Data processing/Metadata/IDENT-Cloquet_SVC-locations.txt")
+metadata <- fread("/media/antonio/antonio_ssd/ligth_quality/Data processing/Metadata/FAB_SVC-locations.txt")
 
 # Test function with out calibration file
-trans <- get_transmittance(nr_file, target, target_col, reference, reference_col)
-head(trans[, 1:10])
-fwrite(trans, 
-       "F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-psm.txt", 
+coeff <- get_coefficients(nr_file, target, target_col, reference, reference_col, metadata)
+head(coeff[, 1:10])
+fwrite(coeff, 
+       "/media/antonio/antonio_ssd/ligth_quality/Data processing/Coefficients/FAB_coefficients_svc-psm.txt", 
        sep = "\t")
 
 #-------------------------------------------------------------------------------
@@ -58,11 +58,9 @@ get_coefficients <- function(nr_file,
   
   #Get just the open observations
   open <- merge(target, metadata, by = "file", all.x = TRUE, all.y = FALSE)
-  open <- open$ID == "open"
-  
-  #Subset
-  target <- target[open == TRUE, ]
-  nr_file <- 
+  open <- open$ID == "open" & is.na(open$ID) == FALSE
+  observations <- 1:length(open)
+  observations <- observations[open == TRUE]
   
   #Select spectra
   target_spect <- target[, .SD , .SDcols = target_col] 
@@ -88,34 +86,29 @@ get_coefficients <- function(nr_file,
     stop("It is likely that the spectral resolution between sensors does not match")
   }
   
-  #Add target and reference files
-  nr_file$target_file <- NA
-  nr_file$reference_file <- NA
-  
   #Empty frame to fill
   frame <- as.data.frame(target_match[0, ])
+  meta <- data.table()
   
-  for(i in 1:nrow(nr_file)) {
+  for(i in 1:length(observations)) {
+    
+    #Select rows
+    files <- subset(nr_file, target == observations[i])
     
     #Get spectra by index
-    inside <- as.numeric(target_match[nr_file$target[i], ])
-    outise <- as.numeric(reference_match[nr_file$reference[i], ])
+    inside <- as.numeric(target_match[files$target[1], ])
+    outise <- as.numeric(reference_match[files$reference[1], ])
     
-    #Estimate transmittance 
-    transm <- inside/outise
-    
-    if(is.null(intercalibration) != TRUE) {
-      
-      transm <- transm*intercalibration
-      
-    }
+    #Estimate coefficients
+    coefficients <- outise/inside
     
     #Fill frame
-    frame <- rbind(frame, matrix(transm, nrow = 1)) 
+    frame <- rbind(frame, matrix(coefficients, nrow = 1)) 
     
     #Fill files
-    nr_file$target_file[i] <- target$file[nr_file$target[i]]
-    nr_file$reference_file[i] <- reference$file[nr_file$reference[i]]
+    files$target[1] <- target$file[files$target[1]]
+    files$reference[1] <- reference$file[files$reference[1]]
+    meta <- rbind(meta, files)
     
   }
   
@@ -124,7 +117,7 @@ get_coefficients <- function(nr_file,
   colnames(frame) <- colnames(target_match)
   
   #Add index
-  frame <- cbind(nr_file, frame)
+  frame <- cbind(meta, frame)
   
   return(frame)
   
