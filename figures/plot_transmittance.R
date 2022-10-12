@@ -20,7 +20,7 @@ library(ggplot2)
 #' @usage 
 
 #Read coefficients
-trans <- fread("F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-psm.txt")
+trans <- fread("F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-asd.txt")
 trans <- na.exclude(trans)
 head(trans[, 1:10])
 trans <- trans[, c(1, 2, 5, 6, 7, 8:2158)]

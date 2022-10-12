@@ -2,7 +2,7 @@
 #### Interpolate coefficients
 ################################################################################
 
-# This function interpolate the coefficients thougth the time between two sets 
+# This function interpolate the coefficients thought the time between two sets 
 # of measurements.
 
 #-------------------------------------------------------------------------------
@@ -22,13 +22,14 @@ library(imputeTS)
 #-------------------------------------------------------------------------------
 #' @example
 
-coefficients <- fread("data/test.txt", header = TRUE)
+coefficients <- fread("F:/ligth_quality/Data processing/Coefficients/FAB_coefficients_svc-asd_subday_averaged.txt", header = TRUE)
 time_span <- 1
+out_path <- "F:/ligth_quality/Data processing/Coefficients/FAB_coefficients_svc-asd_interpolation.txt"
 
 #-------------------------------------------------------------------------------
 #' Function
 
-interpolate_coefficients <- function(coefficients, time_range, time_span) {
+interpolate_coefficients <- function(coefficients, time_span) {
   
   #Dates and times
   coefficients$date <- as.IDate(coefficients$date)
@@ -37,7 +38,7 @@ interpolate_coefficients <- function(coefficients, time_range, time_span) {
   coefficients$time <- as.ITime(coefficients$time)
   
   #Create sequence of time
-  time_range <- as.ITime(range(as.ITime(time_range)))
+  time_range <- as.ITime(range(as.ITime(coefficients$time)))
   time_sequence <- seq(time_range[1], time_range[2], by = 1)
   
   #Complete
@@ -70,6 +71,10 @@ interpolate_coefficients <- function(coefficients, time_range, time_span) {
     
   }
   
+  fwrite(complete, out_path, sep = "\t")
+  
   return(complete)
   
 }
+
+

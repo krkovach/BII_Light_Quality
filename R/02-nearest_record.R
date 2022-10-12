@@ -22,7 +22,7 @@ library(lubridate)
 
 # file <- fread("F:/ligth_quality/Data processing/file-index/FAB_file-ind.txt")
 # index_target <- 7
-# index_reference <- 6
+# index_reference <- 4
 # test <- nearest_record(file, index_target, index_reference)
 # head(test)
 # Subset by threshold

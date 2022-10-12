@@ -21,12 +21,12 @@ library(ggplot2)
 #-------------------------------------------------------------------------------
 #' @example
 
-transmittance <- fread("F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-psm.txt")
+transmittance <- fread("F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-asd.txt")
 meta <- fread("F:/ligth_quality/Data processing/Metadata/IDENT-Cloquet_SVC-locations.txt")
 transmittance <- merge(meta, transmittance, all.x = FALSE, all.y = TRUE, by.x = "file", by.y = "target_file")
 
 site_name <- "IDENT-Cloquet"
-output_path <- "F:/ligth_quality/Data processing/visual_assessment/IDENT-Cloquet"
+output_path <- "F:/ligth_quality/Data processing/visual_assessment/IDENT-Cloquet/SVC-ASD"
 
 visual_assessment(transmittance, site_name, output_path)
 
@@ -49,7 +49,7 @@ visual_assessment <- function(transmittance, site_name, output_path) {
                       "Time: ",
                       transmittance$time)
   name_files <- paste0("Target: ",
-                       transmittance$target_file,
+                       transmittance$file,
                        "  -  ",
                        "Reference: ",
                        transmittance$reference_file)
@@ -57,7 +57,7 @@ visual_assessment <- function(transmittance, site_name, output_path) {
   #Loop over rows
   for(i in 1:files) {
     
-    Transmittance <- as.numeric(transmittance[i, 10:2158])
+    Transmittance <- as.numeric(transmittance[i, 10:ncol(transmittance)])
     
     aveg <- mean(Transmittance, na.rm = TRUE)
     

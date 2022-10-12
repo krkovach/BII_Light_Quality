@@ -27,15 +27,15 @@ source("R/matching.R")
 #-------------------------------------------------------------------------------
 #' @example
 
-#dates <- c(as.Date("2021-07-19"), as.Date("2021-07-20"))
-#time_range <- as.POSIXct(c("08:00:00", "17:00:00"), format="%H:%M:%OS", tz="GMT")
-#time_span <- 1
-#threshold = 0.99
-#pyranometer <- fread("F:/ligth_quality/Data processing/Pyranometer/FAB_pyranometer.txt")
-#asd <- fread("F:/ligth_quality/Data processing/ASD/FAB_asd.txt")
-#blk <- fread("F:/ligth_quality/Data processing/BLK-C/FAB_BLK-C.txt")
-#psm <- fread("F:/ligth_quality/Data processing/PSM/FAB_psm.txt", header = TRUE)
-#svc <- fread("F:/ligth_quality/Data processing/SVC/FAB_svc.txt")
+dates <- c(as.Date("2021-07-26"), as.Date("2021-07-30"))
+time_range <- as.POSIXct(c("08:00:00", "17:00:00"), format="%H:%M:%OS", tz="GMT")
+time_span <- 1
+threshold = 0.99
+pyranometer <- fread("F:/ligth_quality/Data processing/Pyranometer/IDENT-Cloquet_pyranometer.txt")
+asd <- fread("F:/ligth_quality/Data processing/ASD/IDENT-Cloquet_asd.txt", header = TRUE)
+blk <- fread("F:/ligth_quality/Data processing/BLK-C/IDENT-Cloquet_BLK-C.txt")
+psm <- fread("F:/ligth_quality/Data processing/PSM/IDENT-Cloquet_psm.txt", header = TRUE)
+svc <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
 
 #list_files <- list(pyranometer = pyranometer,
 #                  asd = asd,
@@ -44,7 +44,7 @@ source("R/matching.R")
 #                  svc = svc)
 
 #index <- matching_files(dates, time_range, time_span, list_files, threshold = 0.99)
-#fwrite(index, "F:/ligth_quality/Data processing/file-index/FAB_file-ind.txt-ind.txt", sep = "\t")  
+#fwrite(index, "F:/ligth_quality/Data processing/file-index/IDENT-Cloquet-ind.txt", sep = "\t")  
 
 #-------------------------------------------------------------------------------
 #' Function
