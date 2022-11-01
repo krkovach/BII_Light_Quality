@@ -19,16 +19,18 @@ source("R/psm_files.R")
 source("R/svc_files.R")
 source("R/read_psm.R")
 source("R/read_svc.R")
+source("R/read_asd.R")
 
 #-------------------------------------------------------------------------------
 # Root file directory
 
-path <- "F:/ligth_quality/FAB"
+path <- "F:/ligth_quality/IDENT-Freiburg"
 
 ################################################################################
 #### ASD folders ####
 ################################################################################
 
+# This section works for FAB and IDENT-Cloquet files
 #-------------------------------------------------------------------------------
 # Step 1 - Organize .asd files based on root path
 
@@ -69,7 +71,44 @@ fwrite(frame_asd,
        paste0(asd_folder_path, "/", "asd_files.txt"),
        sep = "\t")
 
+# This section works for IDENT-Freiburg files
+#-------------------------------------------------------------------------------
+# Step 1 - Organize .asd files based on root path
 
+# Different in your machine
+asd_folder_path <- paste0(path, "/ASD")
+
+# Load files
+frame_asd <- list.files(path = asd_folder_path, 
+                        pattern = ".txt", 
+                        all.files = TRUE,
+                        full.names = FALSE, 
+                        recursive = TRUE)
+
+#Arrange path in frame
+frame_asd <- data.table(matrix(unlist(strsplit(frame_asd, "/")), 
+                           nrow= length(frame_asd), 
+                           byrow=TRUE), stringsAsFactors=FALSE)
+colnames(frame_asd) <- c("folder", "file")
+
+#-------------------------------------------------------------------------------
+# Step 2 - Read files based on path and organize them
+
+# Create paths
+files_asd <- paste0(asd_folder_path, "/", frame_asd$folder, "/", frame_asd$file)
+
+# Read spectra
+asd_library <- read_asd(paths = files_asd)
+
+# Integrate meta and spectra to frame_asd
+frame_asd <- cbind(frame_asd, asd_library)
+
+#-------------------------------------------------------------------------------
+# Step 3 - Export spectra
+
+fwrite(frame_asd, 
+       paste0(asd_folder_path, "/", "asd_files.txt"),
+       sep = "\t")
 
 ################################################################################
 #### PSM folders ####
