@@ -27,24 +27,25 @@ source("R/matching.R")
 #-------------------------------------------------------------------------------
 #' @example
 
-dates <- c(as.Date("2021-07-26"), as.Date("2021-07-30"))
+dates <- c(as.Date("2021-01-07"), as.Date("2021-03-07"))
 time_range <- as.POSIXct(c("08:00:00", "17:00:00"), format="%H:%M:%OS", tz="GMT")
 time_span <- 1
 threshold = 0.99
-pyranometer <- fread("F:/ligth_quality/Data processing/Pyranometer/IDENT-Cloquet_pyranometer.txt")
-asd <- fread("F:/ligth_quality/Data processing/ASD/IDENT-Cloquet_asd.txt", header = TRUE)
-blk <- fread("F:/ligth_quality/Data processing/BLK-C/IDENT-Cloquet_BLK-C.txt")
-psm <- fread("F:/ligth_quality/Data processing/PSM/IDENT-Cloquet_psm.txt", header = TRUE)
-svc <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
+root_path <- "/media/antonio/antonio_ssd/ligth_quality"
+#pyranometer <- fread(paste0(root_path, "/Data processing/Pyranometer/IDENT-Freiburg_pyranometer.txt"))
+asd <- fread(paste0(root_path, "/Data processing/ASD/IDENT-Freiburg_asd.txt"), header = TRUE)
+blk <- fread(paste0(root_path, "/Data processing/BLK-C/IDENT-Freiburg_BLK-C.txt"))
+#psm <- fread(paste0(root_path, "/Data processing/PSM/IDENT-Freiburg_psm.txt"), header = TRUE)
+svc <- fread(paste0(root_path, "/Data processing/SVC/IDENT-Freiburg_svc.txt"))
 
-#list_files <- list(pyranometer = pyranometer,
-#                  asd = asd,
-#                  blk = blk,
-#                  psm = psm,
-#                  svc = svc)
+list_files <- list(#pyranometer = pyranometer,
+                   asd = asd,
+                   blk = blk,
+                   #psm = psm,
+                   svc = svc)
 
-#index <- matching_files(dates, time_range, time_span, list_files, threshold = 0.99)
-#fwrite(index, "F:/ligth_quality/Data processing/file-index/IDENT-Cloquet-ind.txt", sep = "\t")  
+index <- matching_files(dates, time_range, time_span, list_files, threshold = 0.99)
+fwrite(index, paste0(root_path, "/Data processing/file-index/IDENT-Freiburg_file-ind.txt"), sep = "\t")  
 
 #-------------------------------------------------------------------------------
 #' Function
