@@ -27,7 +27,7 @@ source("R/matching.R")
 #-------------------------------------------------------------------------------
 #' @example
 
-dates <- c(as.Date("2021-01-07"), as.Date("2021-03-07"))
+dates <- c(as.Date("2021-07-01"), as.Date("2021-07-03"))
 time_range <- as.POSIXct(c("08:00:00", "17:00:00"), format="%H:%M:%OS", tz="GMT")
 time_span <- 1
 threshold = 0.99

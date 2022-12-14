@@ -21,12 +21,13 @@ library(ggplot2)
 #-------------------------------------------------------------------------------
 #' @example
 
-transmittance <- fread("F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-asd.txt")
-meta <- fread("F:/ligth_quality/Data processing/Metadata/IDENT-Cloquet_SVC-locations.txt")
-transmittance <- merge(meta, transmittance, all.x = FALSE, all.y = TRUE, by.x = "file", by.y = "target_file")
+root_path <- "/media/antonio/antonio_ssd/ligth_quality/Data processing"
+transmittance <- fread(paste0(root_path, "/Transmittance/IDENT-Freiburg_transmittance_svc-asd.txt"))
+meta <- fread(paste0(root_path, "/Metadata/IDENT-Freiburg_SVC-locations.txt"))
+transmittance <- merge(meta, transmittance, all.x = FALSE, all.y = TRUE, by.x = "SVC_file", by.y = "target_file")
 
-site_name <- "IDENT-Cloquet"
-output_path <- "F:/ligth_quality/Data processing/visual_assessment/IDENT-Cloquet/SVC-ASD"
+site_name <- "IDENT-Freiburg"
+output_path <- paste0(root_path, "/visual_assessment/IDENT-Freiburg/SVC-ASD")
 
 visual_assessment(transmittance, site_name, output_path)
 
