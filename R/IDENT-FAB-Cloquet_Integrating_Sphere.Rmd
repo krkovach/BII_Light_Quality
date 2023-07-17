@@ -1,0 +1,268 @@
+---
+title: "IDENT-FAB and IDENT-Cloquet Integrating Sphere"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE,echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(ggplot2)
+require(doParallel)
+require(spectrolab)
+require(stringr)
+require(asdreader)
+require(reshape2)
+set.seed(112345)
+cores=detectCores()-1
+```
+
+## Integrating Sphere Output
+
+```{r build_table,echo=FALSE}
+# Angio=read.csv("G:/PostDoc/External_Projects/BII/Integrating Sphere/File Overview/IS_Angio.csv",head=T,stringsAsFactors=FALSE)
+
+Angio=read.csv("/Users/30062322/Documents/Research/UMN/IDENT/Light quality/Scripts from Kyle/IS_Angio.csv",head=T,stringsAsFactors=FALSE)
+
+i=2
+
+Plot=Angio$X[i]
+Date=Angio$X.7[i]
+t.rref=Angio$X.2[i]
+t.rstr=Angio$X.2[i+1]
+t.rtar=Angio$X.2[i+2]
+m.rtar=Angio$X.2[i+3]
+b.rtar=Angio$X.2[i+4]
+t.rref2=Angio$X.2[i+5]
+t.tref=Angio$X.5[i]
+t.ttar=Angio$X.5[i+1]
+m.ttar=Angio$X.5[i+2]
+b.ttar=Angio$X.5[i+3]
+t.tref2=Angio$X.5[i+4]
+AngioTable=data.frame(Plot,Date,t.rref,t.rstr,t.rtar,m.rtar,
+                      b.rtar,t.rref2,t.tref,t.ttar,m.ttar,b.ttar,t.tref2)
+AngioTable=AngioTable[0,]
+
+while (i < 800){
+  Plot=Angio$X[i]
+  Date=Angio$X.7[i]
+  t.rref=Angio$X.2[i]
+  t.rstr=Angio$X.2[i+1]
+  t.rtar=Angio$X.2[i+2]
+  m.rtar=Angio$X.2[i+3]
+  b.rtar=Angio$X.2[i+4]
+  t.rref2=Angio$X.2[i+5]
+  t.tref=Angio$X.5[i]
+  t.ttar=Angio$X.5[i+1]
+  m.ttar=Angio$X.5[i+2]
+  b.ttar=Angio$X.5[i+3]
+  t.tref2=Angio$X.5[i+4]
+  i=i+6
+  TableRow=data.frame(Plot,Date,t.rref,t.rstr,t.rtar,m.rtar,
+                      b.rtar,t.rref2,t.tref,t.ttar,m.ttar,b.ttar,t.tref2)
+  AngioTable=rbind(AngioTable,TableRow)
+}
+
+AngioTable=AngioTable[rowSums(is.na(AngioTable)) !=ncol(AngioTable),]
+
+AngioTable_melt=melt(AngioTable, id=c("Plot","Date"))
+AngioTable_melt$variable=as.character(AngioTable_melt$variable)
+
+#Gymno Table
+# Gymno=read.csv("G:/PostDoc/External_Projects/BII/Integrating Sphere/File Overview/IS_Gymno.csv",head=T)
+Gymno=read.csv("/Users/30062322/Documents/Research/UMN/IDENT/Light quality/Scripts from Kyle/IS_Gymno.csv",head=T)
+
+i=1
+
+Plot=Gymno$Plot[i]
+Date=Gymno$X.1[i]
+t.rref=Gymno$Scan.Number[i]
+t.rstr=Gymno$Scan.Number[i+1]
+t.rtar=Gymno$Scan.Number[i+2]
+m.rref=Gymno$Scan.Number[i+3]
+m.rstr=Gymno$Scan.Number[i+4]
+m.rtar=Gymno$Scan.Number[i+5]
+b.rref=Gymno$Scan.Number[i+6]
+b.rstr=Gymno$Scan.Number[i+7]
+b.rtar=Gymno$Scan.Number[i+8]
+
+t.tref=Gymno$Scan.Number.1[i]
+t.ttar=Gymno$Scan.Number.1[i+1]
+m.tref=Gymno$Scan.Number.1[i+2]
+m.ttar=Gymno$Scan.Number.1[i+3]
+b.tref=Gymno$Scan.Number.1[i+4]
+b.ttar=Gymno$Scan.Number.1[i+5]
+GymnoTable=data.frame(Plot,Date,t.rref,t.rstr,t.rtar,m.rref,m.rstr,m.rtar,b.rref,b.rstr,b.rtar,t.tref,t.ttar,m.tref,m.ttar,b.tref,b.ttar)
+GymnoTable=GymnoTable[0,]
+
+while (i < 800){
+Plot=Gymno$Plot[i]
+Date=Gymno$X.1[i]
+t.rref=Gymno$Scan.Number[i]
+t.rstr=Gymno$Scan.Number[i+1]
+t.rtar=Gymno$Scan.Number[i+2]
+m.rref=Gymno$Scan.Number[i+3]
+m.rstr=Gymno$Scan.Number[i+4]
+m.rtar=Gymno$Scan.Number[i+5]
+b.rref=Gymno$Scan.Number[i+6]
+b.rstr=Gymno$Scan.Number[i+7]
+b.rtar=Gymno$Scan.Number[i+8]
+
+t.tref=Gymno$Scan.Number.1[i]
+t.ttar=Gymno$Scan.Number.1[i+1]
+m.tref=Gymno$Scan.Number.1[i+2]
+m.ttar=Gymno$Scan.Number.1[i+3]
+b.tref=Gymno$Scan.Number.1[i+4]
+b.ttar=Gymno$Scan.Number.1[i+5]
+  i=i+9
+  TableRow=data.frame(Plot,Date,t.rref,t.rstr,t.rtar,m.rref,m.rstr,m.rtar,b.rref,b.rstr,b.rtar,t.tref,t.ttar,m.tref,m.ttar,b.tref,b.ttar)
+  GymnoTable=rbind(GymnoTable,TableRow)
+}
+
+GymnoTable=GymnoTable[rowSums(is.na(GymnoTable)) !=ncol(GymnoTable),]
+
+GymnoTable_melt=melt(GymnoTable, id=c("Plot","Date"))
+GymnoTable_melt$variable=as.character(GymnoTable_melt$variable)
+```
+
+## Integrating Sphere Output
+
+```{r merge_data_calculate,echo=FALSE}
+# ISdata=read.csv("G:/PostDoc/External_Projects/BII/Integrating Sphere/Processed_Data/Int_Sph.txt",head=T,stringsAsFactors=FALSE)
+ISdata=read.csv("/Users/30062322/Documents/Research/UMN/IDENT/Light quality/Scripts from Kyle/Int_Sph.txt",head=T,stringsAsFactors=FALSE)
+
+```
+
+## Extract data
+
+```{r extract_data,echo=FALSE}
+#Angio
+newmergetable=merge(AngioTable_melt, ISdata, by.x=c("Date","value"),by.y=c("folder","filenumber"))
+variablesplit=colsplit(newmergetable$variable,'[.]',names=c("leaflocation", "measurement"))
+inttype=substr(variablesplit$measurement,1,1)
+measurementtype=substr(variablesplit$measurement,2,nchar(variablesplit$measurement))
+newmergetable=cbind(measurementtype,newmergetable)
+newmergetable=cbind(inttype,newmergetable)
+
+nmt_t=subset(newmergetable,inttype=="t")
+nmt_r=subset(newmergetable,inttype=="r")
+
+#Transmittance
+for (i in unique(nmt_t$Plot)){
+  datanow=subset(nmt_t,Plot==i)
+  ref=datanow[datanow$measurementtype=="ref"|datanow$measurementtype=="ref2",c(5,8:1000)]
+  ref=aggregate(.~Plot, FUN = mean, data=ref)
+  ref=ref[,-1]
+  datanownow=subset(datanow,measurementtype=="tar")
+  datanownow_clip=datanownow[,8:1000]
+  l=datanownow_clip[0,]
+  for (j in 1:nrow(datanownow_clip)){
+    k=datanownow_clip[j,]/ref
+    l=rbind(l,k)
+  }
+  m=cbind(datanownow[,c(3,5:7)],l)
+  
+  if(!exists("o")){
+    o=m
+  } else {
+    o=rbind(o,m)
+  }
+}
+Final_Angio_Transmittance=o
+rm(o)
+write.csv(Final_Angio_Transmittance,"Angio_Transmittance.csv")
+
+#Reflectance
+for (i in unique(nmt_r$Plot)){
+  datanow=subset(nmt_r,Plot==i)
+  ref=datanow[datanow$measurementtype=="ref"|datanow$measurementtype=="ref2",c(5,8:1000)]
+  ref=aggregate(.~Plot, FUN = mean, data=ref)
+  ref=ref[,-1]
+  stray=datanow[datanow$measurementtype=="str",c(8:1000)]
+  datanownow=subset(datanow,measurementtype=="tar")
+  datanownow_clip=datanownow[,8:1000]
+  l=datanownow_clip[0,]
+  for (j in 1:nrow(datanownow_clip)){
+    k=(datanownow_clip[j,]-stray)/(ref-stray)
+    l=rbind(l,k)
+  }
+  m=cbind(datanownow[,c(3,5:7)],l)
+  
+  if(!exists("o")){
+    o=m
+  } else {
+    o=rbind(o,m)
+  }
+}
+Final_Angio_Reflectance=o
+rm(o)
+write.csv(Final_Angio_Reflectance,"Angio_Reflectance.csv")
+
+#Gymno
+newmergetable=merge(GymnoTable_melt, ISdata, by.x=c("Date","value"),by.y=c("folder","filenumber"))
+variablesplit=colsplit(newmergetable$variable,'[.]',names=c("leaflocation", "measurement"))
+leaflocation=variablesplit$leaflocation
+inttype=substr(variablesplit$measurement,1,1)
+measurementtype=substr(variablesplit$measurement,2,nchar(variablesplit$measurement))
+newmergetable=cbind(measurementtype,newmergetable)
+newmergetable=cbind(leaflocation,newmergetable)
+newmergetable=cbind(inttype,newmergetable)
+
+nmt_t=subset(newmergetable,inttype=="t")
+nmt_r=subset(newmergetable,inttype=="r")
+
+#Transmittance
+for (h in unique(nmt_t$Plot)){
+  datanow=subset(nmt_t,Plot==h)
+  for (i in unique(nmt_t$leaflocation)){
+    datanow2=subset(datanow,leaflocation==i)
+    ref=datanow2[datanow2$measurementtype=="ref",c(6,9:1001)]
+    ref=ref[,-1]
+    datanownow=subset(datanow2,measurementtype=="tar")
+    datanownow_clip=datanownow[,9:1001]
+    l=datanownow_clip[0,]
+    for (j in 1:nrow(datanownow_clip)){
+      k=datanownow_clip[j,]/ref
+      l=rbind(l,k)
+    }
+    m=cbind(datanownow[,c(4,6:8)],l)
+    
+    if(!exists("o")){
+      o=m
+    } else {
+      o=rbind(o,m)
+    }
+  }
+}
+Final_Gymno_Transmittance=o
+rm(o)
+write.csv(Final_Gymno_Transmittance,"Gymno_Transmittance.csv")
+
+#Reflectance
+for (i in unique(nmt_r$Plot)){
+  datanow=subset(nmt_r,Plot==i)
+  for (i in unique(nmt_t$leaflocation)){
+    datanow2=subset(datanow,leaflocation==i)
+    ref=datanow2[datanow2$measurementtype=="ref",c(6,9:1001)]
+    ref=ref[,-1]
+    stray=datanow2[datanow2$measurementtype=="str",c(9:1001)]
+    datanownow=subset(datanow2,measurementtype=="tar")
+    datanownow_clip=datanownow[,9:1001]
+    l=datanownow_clip[0,]
+    for (j in 1:nrow(datanownow_clip)){
+      k=(datanownow_clip[j,]-stray)/(ref-stray)
+      l=rbind(l,k)
+    }
+    m=cbind(datanownow[,c(3,5:7)],l)
+    
+    if(!exists("o")){
+      o=m
+    } else {
+      o=rbind(o,m)
+  }
+  }
+}
+Final_Gymno_Reflectance=o
+rm(o)
+write.csv(Final_Gymno_Reflectance,"Gymno_Reflectance.csv")
+```
