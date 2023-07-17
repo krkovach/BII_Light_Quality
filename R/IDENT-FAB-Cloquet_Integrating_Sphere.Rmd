@@ -133,7 +133,7 @@ ISdata=read.csv("/Users/30062322/Documents/Research/UMN/IDENT/Light quality/Scri
 
 ```
 
-## Extract data
+## Extract data and calculate transmittance, reflectance
 
 ```{r extract_data,echo=FALSE}
 #Angio
@@ -222,7 +222,8 @@ for (h in unique(nmt_t$Plot)){
     datanownow_clip=datanownow[,9:1001]
     l=datanownow_clip[0,]
     for (j in 1:nrow(datanownow_clip)){
-      k=datanownow_clip[j,]/ref
+      g=datanownow_clip[j,"X399.8"]/ref$X399.8 # g = G_t = gap fraction at ~400 nm
+      k=((datanownow_clip[j,]/ref)-g)*(1/(1-g)) # gap fraction correction following Noda et al. 2013
       l=rbind(l,k)
     }
     m=cbind(datanownow[,c(4,6:8)],l)
@@ -234,23 +235,35 @@ for (h in unique(nmt_t$Plot)){
     }
   }
 }
-Final_Gymno_Transmittance=o
+Final_Gymno_Transmittance_gapcorrected=o
 rm(o)
-write.csv(Final_Gymno_Transmittance,"Gymno_Transmittance.csv")
+write.csv(Final_Gymno_Transmittance_gapcorrected,"Gymno_Transmittance_gapcorrected.csv")
 
 #Reflectance
 for (i in unique(nmt_r$Plot)){
   datanow=subset(nmt_r,Plot==i)
+  datanow_tr=subset(nmt_t,Plot==i) # also subsetting transmittance data
+  
   for (i in unique(nmt_t$leaflocation)){
     datanow2=subset(datanow,leaflocation==i)
+    datanow2_tr=subset(datanow_tr,leaflocation==i) # also subsetting transmittance data
+    
     ref=datanow2[datanow2$measurementtype=="ref",c(6,9:1001)]
     ref=ref[,-1]
     stray=datanow2[datanow2$measurementtype=="str",c(9:1001)]
     datanownow=subset(datanow2,measurementtype=="tar")
     datanownow_clip=datanownow[,9:1001]
+    
+    ref_tr=datanow2_tr[datanow2_tr$measurementtype=="ref",c(6,9:1001)]
+    ref_tr=ref_tr[,-1]
+    datanownow_tr=subset(datanow2_tr,measurementtype=="tar")
+    datanownow_tr_clip=datanownow_tr[,9:1001]
+    
     l=datanownow_clip[0,]
+    
     for (j in 1:nrow(datanownow_clip)){
-      k=(datanownow_clip[j,]-stray)/(ref-stray)
+      g=datanownow_tr_clip[j,"X399.8"]/ref_tr$X399.8 # g = G_t = gap fraction calculated from transmittance at ~400 nm
+      k=((datanownow_clip[j,]-stray)/(ref-stray))*(1/(1-g))
       l=rbind(l,k)
     }
     m=cbind(datanownow[,c(3,5:7)],l)
@@ -262,7 +275,7 @@ for (i in unique(nmt_r$Plot)){
   }
   }
 }
-Final_Gymno_Reflectance=o
+Final_Gymno_Reflectance_gapcorrected=o
 rm(o)
-write.csv(Final_Gymno_Reflectance,"Gymno_Reflectance.csv")
+write.csv(Final_Gymno_Reflectance_gapcorrected,"Gymno_Reflectance_gapcorrected.csv")
 ```
