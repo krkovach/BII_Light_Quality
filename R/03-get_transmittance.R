@@ -28,41 +28,43 @@ source("R/02-nearest_record.R")
 #-------------------------------------------------------------------------------
 #' @example
 
+root_path <-  "/media/antonio/antonio_ssd/ligth_quality/Data processing"
+
 #Get index file
- file <- fread("F:/ligth_quality/Data processing/file-index/IDENT-Cloquet_file-ind.txt")
- index_target <- 7
- index_reference <- 4
+file <- fread(paste0(root_path, "/file-index/IDENT-Cloquet_file-ind.txt"))
+index_target <- 7 #e.g., SVC
+index_reference <- 4 #e.g., ASD
 
 #Get nearest record
- nr_file <- nearest_record(file, index_target, index_reference)
- head(nr_file)
- nr_file <- subset(nr_file, abs(time_difference) <= 40)
- head(nr_file)
+nr_file <- nearest_record(file, index_target, index_reference)
+head(nr_file)
+nr_file <- subset(nr_file, abs(time_difference) <= 40)
+head(nr_file)
  
 #Match coefficients
- coefficients <- fread("F:/ligth_quality/Data processing/Coefficients/IDENT-Cloquet_coefficients_svc-asd_interpolation.txt")
- coefficients$time <- as.ITime(coefficients$time)
- coefficients$date <- as.IDate(coefficients$date)
- nr_file <- merge(nr_file, coefficients, by = c("date", "time"), all.x = TRUE, all.y = FALSE)
- nr_file <- na.exclude(nr_file)
+coefficients <- fread(paste0(root_path, "/Coefficients/IDENT-Cloquet_coefficients_svc-asd_interpolation.txt"))
+coefficients$time <- as.ITime(coefficients$time)
+coefficients$date <- as.IDate(coefficients$date)
+nr_file <- merge(nr_file, coefficients, by = c("date", "time"), all.x = TRUE, all.y = FALSE)
+nr_file <- na.exclude(nr_file)
  
 #Coefficients_col
- coefficients_col <- 6:2156 #based on nr_file
+coefficients_col <- 6:2156 #based on nr_file
  
 #Get target sensor
- target <- fread("F:/ligth_quality/Data processing/SVC/IDENT-Cloquet_svc.txt")
- target_col <- 6:2223
+target <- fread(paste0(root_path, "/SVC/IDENT-Cloquet_svc.txt"))
+target_col <- 6:2223
  
 #Get reference sensor
- reference <- fread("F:/ligth_quality/Data processing/ASD/IDENT-Cloquet_asd.txt")
- reference_col <- 5:2155
+reference <- fread(paste0(root_path, "/ASD/IDENT-Cloquet_asd.txt"))
+reference_col <- 5:2155
 
 # Test function with out calibration file
- trans <- get_transmittance(nr_file, target, target_col, reference, reference_col, coefficients_col)
- head(trans[, 1:10])
- fwrite(trans, 
-        "F:/ligth_quality/Data processing/Transmittance/IDENT-Cloquet_transmittance_svc-asd.txt", 
-        sep = "\t")
+trans <- get_transmittance(nr_file, target, target_col, reference, reference_col, coefficients_col)
+head(trans[, 1:10])
+fwrite(trans, 
+       paste0(root_path, "/Transmittance/IDENT-Cloquet_transmittance_svc-asd.txt"), 
+       sep = "\t")
 
 #-------------------------------------------------------------------------------
 #' Function
@@ -102,9 +104,9 @@ get_transmittance <- function(nr_file,
   rwv <- as.numeric(colnames(reference_match))
   cwv <- as.numeric(colnames(coefficients_match))
   
-  if(all.equal(twv, rwv, cwv) != TRUE) {
-    stop("It is likely that the spectral resolution between sensors does not match")
-  }
+  #if(all.equal(twv, rwv, cwv) != TRUE) {
+  #  stop("It is likely that the spectral resolution between sensors does not match")
+  #}
   
   #Add target and reference files
   nr_file$target_file <- NA

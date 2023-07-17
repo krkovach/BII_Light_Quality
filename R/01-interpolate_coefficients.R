@@ -22,14 +22,17 @@ library(imputeTS)
 #-------------------------------------------------------------------------------
 #' @example
 
-coefficients <- fread("F:/ligth_quality/Data processing/Coefficients/FAB_coefficients_svc-asd_subday_averaged.txt", header = TRUE)
+root_path <- "/media/antonio/antonio_ssd/ligth_quality/Data processing/Coefficients"
+coefficients <- fread(paste0(root_path, "/IDENT-Freiburg_coefficients_svc-asd_subday_averaged.txt"), header = TRUE)
 time_span <- 1
-out_path <- "F:/ligth_quality/Data processing/Coefficients/FAB_coefficients_svc-asd_interpolation.txt"
+out_path <- paste0(root_path, "/IDENT-Freiburg_coefficients__svc-asd_interpolation.txt")
+
+interpolate_coefficients(coefficients, time_span, out_path)
 
 #-------------------------------------------------------------------------------
 #' Function
 
-interpolate_coefficients <- function(coefficients, time_span) {
+interpolate_coefficients <- function(coefficients, time_span, out_path) {
   
   #Dates and times
   coefficients$date <- as.IDate(coefficients$date)
