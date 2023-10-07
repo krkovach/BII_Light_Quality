@@ -6,7 +6,6 @@ require(nlme)
 require(MuMIn)
 require(glmm.hp) # hierarchical partitioning contributions to marginal R2
 require(emmeans)
-# Note: lme4 is lmer; nlme is lme -- using nlme
 
 #_______________________________________________________________________________
 # Load data:
@@ -133,11 +132,6 @@ cor(log10(df_uv_mfull$obs), df_uv_mfull$pred, method="pearson")^2
 cor(log10(df_uv_mfull[df_uv_mfull$AngioGymnoMix=="A",]$obs), df_uv_mfull[df_uv_mfull$AngioGymnoMix=="A",]$pred, method="pearson")^2
 cor(log10(df_uv_mfull[df_uv_mfull$AngioGymnoMix=="G",]$obs), df_uv_mfull[df_uv_mfull$AngioGymnoMix=="G",]$pred, method="pearson")^2
 cor(log10(df_uv_mfull[df_uv_mfull$AngioGymnoMix=="M",]$obs), df_uv_mfull[df_uv_mfull$AngioGymnoMix=="M",]$pred, method="pearson")^2
-# # This would be the alternative (converting back the predictions):
-# cor(df_uv_mfull$obs, 10^df_uv_mfull$pred, method="pearson")^2
-# cor(df_uv_mfull[df_uv_mfull$AngioGymnoMix=="A",]$obs, 10^df_uv_mfull[df_uv_mfull$AngioGymnoMix=="A",]$pred, method="pearson")^2
-# cor(df_uv_mfull[df_uv_mfull$AngioGymnoMix=="G",]$obs, 10^df_uv_mfull[df_uv_mfull$AngioGymnoMix=="G",]$pred, method="pearson")^2
-# cor(df_uv_mfull[df_uv_mfull$AngioGymnoMix=="M",]$obs, 10^df_uv_mfull[df_uv_mfull$AngioGymnoMix=="M",]$pred, method="pearson")^2
 
 
 # Hierarchical partitioning: to assess independent and joint explanatory power of each variable
