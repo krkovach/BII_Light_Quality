@@ -513,8 +513,46 @@ r.squaredGLMM(nbe_lov447_mfull)
 r.squaredGLMM(nbe_rtofr_mfull)
 
 
+# Interaction without LAI clumping correction
+summary(nbe_uv_mfull_test <- lme(X360 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_blue_mfull_test <- lme(X440 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_red_mfull_test <- lme(X660 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_re_mfull_test <- lme(X730 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_nir_mfull_test <- lme(X865 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_swir_mfull_test <- lme(X1610 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_lov390_mfull_test <- lme(X390 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_lov447_mfull_test <- lme(X447 ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_rtofr_mfull_test <- lme(RtoFR ~ NBE_LAI_allloc * AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
 
+summary(nbe_uv_mred_test <- lme(X360 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_blue_mred_test <- lme(X440 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_red_mred_test <- lme(X660 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_re_mred_test <- lme(X730 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_nir_mred_test <- lme(X865 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_swir_mred_test <- lme(X1610 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_lov390_mred_test <- lme(X390 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_lov447_mred_test <- lme(X447 ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
+summary(nbe_rtofr_mred_test <- lme(RtoFR ~ NBE_LAI_allloc + AngioGymnoMix, random=~1|Site, data=all_spec_overyielding, method="ML"))
 
+anova(nbe_uv_mfull_test) # NS
+anova(nbe_blue_mfull_test) # NS
+anova(nbe_red_mfull_test) # NS
+anova(nbe_re_mfull_test) # NS
+anova(nbe_nir_mfull_test) # NS
+anova(nbe_swir_mfull_test) # NS
+anova(nbe_lov390_mfull_test) # NS
+anova(nbe_lov447_mfull_test) # NS
+anova(nbe_rtofr_mfull_test) # significant
+
+anova(nbe_uv_mfull_test, nbe_uv_mred_test) # NS
+anova(nbe_blue_mfull_test, nbe_blue_mred_test) # NS
+anova(nbe_red_mfull_test, nbe_red_mred_test) # NS
+anova(nbe_re_mfull_test, nbe_re_mred_test) # NS
+anova(nbe_nir_mfull_test, nbe_nir_mred_test) # NS
+anova(nbe_swir_mfull_test, nbe_swir_mred_test) # NS
+anova(nbe_lov390_mfull_test, nbe_lov390_mred_test) # NS
+anova(nbe_lov447_mfull_test, nbe_lov447_mred_test) # NS
+anova(nbe_rtofr_mfull_test, nbe_rtofr_mred_test) # significant
 
 #_______________________________________________________________________________
 # Pulling out key models and stats:
@@ -538,6 +576,28 @@ r.squaredGLMM(swir_mfull)
 r.squaredGLMM(lov390_mfull)
 r.squaredGLMM(lov447_mfull)
 r.squaredGLMM(rtofr_mfull)
+
+
+# Interaction without LAI clumping correction? Smaller but usually still evident
+summary(uv_mfull_test <- lme(log10(X360) ~ LAI_allloc * AngioGymnoMix + Leaf_X360, random=~1|Site, data=all_spec2, method="REML"))
+summary(blue_mfull_test <- lme(log10(X440) ~ LAI_allloc * AngioGymnoMix + Leaf_X440, random=~1|Site, data=all_spec2, method="REML"))
+summary(red_mfull_test <- lme(log10(X660) ~ LAI_allloc * AngioGymnoMix + Leaf_X660, random=~1|Site, data=all_spec2, method="REML"))
+summary(re_mfull_test <- lme(log10(X730) ~ LAI_allloc * AngioGymnoMix + Leaf_X730, random=~1|Site, data=all_spec2, method="REML"))
+summary(nir_mfull_test <- lme(log10(X865) ~ LAI_allloc * AngioGymnoMix + Leaf_X865, random=~1|Site, data=all_spec2, method="REML"))
+summary(swir_mfull_test <- lme(log10(X1610) ~ LAI_allloc * AngioGymnoMix + Leaf_X1610, random=~1|Site, data=all_spec2, method="REML"))
+summary(lov390_mfull_test <- lme(log10(X390) ~ LAI_allloc * AngioGymnoMix + Leaf_X390, random=~1|Site, data=all_spec2, method="REML"))
+summary(lov447_mfull_test <- lme(log10(X447) ~ LAI_allloc * AngioGymnoMix + Leaf_X447, random=~1|Site, data=all_spec2, method="REML"))
+summary(rtofr_mfull_test <- lme(RtoFR ~ LAI_allloc * AngioGymnoMix + Leaf_RtoFR, random=~1|Site, data=all_spec2, method="REML"))
+
+anova(uv_mfull_test)
+anova(blue_mfull_test)
+anova(red_mfull_test)
+anova(re_mfull_test) # no longer significant interaction
+anova(nir_mfull_test)# no longer significant interaction
+anova(swir_mfull_test)# no longer significant interaction
+anova(lov390_mfull_test)
+anova(lov447_mfull_test)
+anova(rtofr_mfull_test)
 
 
 
